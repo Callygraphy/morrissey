@@ -1,3 +1,3 @@
 #!/usr/bin/env ruby -I ../lib -I lib
-require 'sinatra'
+require 'morrissey'
 get('/') { 'this is a simple app' }

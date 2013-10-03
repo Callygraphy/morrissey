@@ -7,9 +7,9 @@
 #   unicorn stream.ru             # gem install unicorn
 #   puma stream.ru                # gem install puma
 
-require 'sinatra/base'
+require 'morrissey/base'
 
-class Stream < Sinatra::Base
+class Stream < Morrissey::Base
   get '/' do
     content_type :txt
 

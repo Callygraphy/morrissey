@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby -I ../lib -I lib
 # coding: utf-8
-require 'sinatra'
+require 'morrissey'
 set :server, 'thin'
 connections = []
 
@@ -26,7 +26,7 @@ __END__
 @@ layout
 <html>
   <head>
-    <title>Super Simple Chat with Sinatra</title>
+    <title>Super Simple Chat with Morrissey</title>
     <meta charset="utf-8" />
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
   </head>
