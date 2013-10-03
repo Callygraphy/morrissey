@@ -3,8 +3,8 @@ require 'rack'
 
 class RackTest < Test::Unit::TestCase
   setup do
-    @foo = Sinatra.new { get('/foo') { 'foo' }}
-    @bar = Sinatra.new { get('/bar') { 'bar' }}
+    @foo = Morrissey.new { get('/foo') { 'foo' }}
+    @bar = Morrissey.new { get('/bar') { 'bar' }}
   end
 
   def build(*middleware)

@@ -2,7 +2,7 @@ require File.expand_path('../helper', __FILE__)
 
 class MiddlewareTest < Test::Unit::TestCase
   setup do
-    @app = mock_app(Sinatra::Application) do
+    @app = mock_app(Morrissey::Application) do
       get('/*')do
         response.headers['X-Tests'] = env['test.ran'].
           map { |n| n.split('::').last }.
@@ -26,7 +26,7 @@ class MiddlewareTest < Test::Unit::TestCase
     end
   end
 
-  it "is added with Sinatra::Application.use" do
+  it "is added with Morrissey::Application.use" do
     @app.use UpcaseMiddleware
     get '/hello-world'
     assert ok?

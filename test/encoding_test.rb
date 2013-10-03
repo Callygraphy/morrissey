@@ -4,7 +4,7 @@ require 'erb'
 
 class BaseTest < Test::Unit::TestCase
   setup do
-    @base = Sinatra.new(Sinatra::Base)
+    @base = Morrissey.new(Morrissey::Base)
     @base.set :views, File.dirname(__FILE__) + "/views"
   end
 

@@ -5,8 +5,8 @@ class BaseTest < Test::Unit::TestCase
     assert true
   end
 
-  describe 'Sinatra::Base subclasses' do
-    class TestApp < Sinatra::Base
+  describe 'Morrissey::Base subclasses' do
+    class TestApp < Morrissey::Base
       get('/') { 'Hello World' }
     end
 
@@ -23,7 +23,7 @@ class BaseTest < Test::Unit::TestCase
       assert_equal 'Hello World', response.body
     end
 
-    class TestApp < Sinatra::Base
+    class TestApp < Morrissey::Base
       get '/state' do
         @foo ||= "new"
         body = "Foo: #{@foo}"
@@ -54,31 +54,31 @@ class BaseTest < Test::Unit::TestCase
     end
   end
 
-  describe "Sinatra::Base#new" do
+  describe "Morrissey::Base#new" do
     it 'returns a wrapper' do
-      assert_equal Sinatra::Wrapper, Sinatra::Base.new.class
+      assert_equal Morrissey::Wrapper, Morrissey::Base.new.class
     end
 
     it 'implements a nice inspect' do
-      assert_equal '#<Sinatra::Base app_file=nil>', Sinatra::Base.new.inspect
+      assert_equal '#<Morrissey::Base app_file=nil>', Morrissey::Base.new.inspect
     end
 
     it 'exposes settings' do
-      assert_equal Sinatra::Base.settings, Sinatra::Base.new.settings
+      assert_equal Morrissey::Base.settings, Morrissey::Base.new.settings
     end
 
     it 'exposes helpers' do
-      assert_equal 'image/jpeg', Sinatra::Base.new.helpers.mime_type(:jpg)
+      assert_equal 'image/jpeg', Morrissey::Base.new.helpers.mime_type(:jpg)
     end
   end
 
-  describe "Sinatra::Base as Rack middleware" do
+  describe "Morrissey::Base as Rack middleware" do
     app = lambda { |env|
       headers = {'X-Downstream' => 'true'}
-      headers['X-Route-Missing'] = env['sinatra.route-missing'] || ''
+      headers['X-Route-Missing'] = env['morrissey.route-missing'] || ''
       [210, headers, ['Hello from downstream']] }
 
-    class TestMiddleware < Sinatra::Base
+    class TestMiddleware < Morrissey::Base
     end
 
     it 'creates a middleware that responds to #call with .new' do
@@ -91,9 +91,9 @@ class BaseTest < Test::Unit::TestCase
       assert_same app, middleware.app
     end
 
-    class TestMiddleware < Sinatra::Base
+    class TestMiddleware < Morrissey::Base
       def route_missing
-        env['sinatra.route-missing'] = '1'
+        env['morrissey.route-missing'] = '1'
         super
       end
 
@@ -120,7 +120,7 @@ class BaseTest < Test::Unit::TestCase
       assert_equal '1', response['X-Route-Missing']
     end
 
-    class TestMiddleware < Sinatra::Base
+    class TestMiddleware < Morrissey::Base
       get('/low-level-forward') { app.call(env) }
     end
 
@@ -131,7 +131,7 @@ class BaseTest < Test::Unit::TestCase
       assert_equal 'Hello from downstream', response.body
     end
 
-    class TestMiddleware < Sinatra::Base
+    class TestMiddleware < Morrissey::Base
       get '/explicit-forward' do
         response['X-Middleware'] = 'true'
         res = forward
@@ -154,7 +154,7 @@ class BaseTest < Test::Unit::TestCase
     app_content_length = lambda {|env|
       [200, {'Content-Length' => '16'}, 'From downstream!']}
 
-    class TestMiddlewareContentLength < Sinatra::Base
+    class TestMiddlewareContentLength < Morrissey::Base
       get '/forward' do
         res = forward
         'From after explicit forward!'

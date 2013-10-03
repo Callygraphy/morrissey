@@ -1,7 +1,7 @@
 require File.expand_path('../helper', __FILE__)
 
 class StreamingTest < Test::Unit::TestCase
-  Stream = Sinatra::Helpers::Stream
+  Stream = Morrissey::Helpers::Stream
 
   it 'returns the concatenated body' do
     mock_app do

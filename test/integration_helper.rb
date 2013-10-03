@@ -1,4 +1,4 @@
-require 'sinatra/base'
+require 'morrissey/base'
 require 'rbconfig'
 require 'open-uri'
 require 'net/http'
@@ -140,7 +140,7 @@ module IntegrationHelper
     end
 
     def warnings
-      log.scan(%r[(?:\(eval|lib/sinatra).*warning:.*$])
+      log.scan(%r[(?:\(eval|lib/morrissey).*warning:.*$])
     end
 
     def run_test(target, &block)
@@ -176,7 +176,7 @@ module IntegrationHelper
 
         Thread.new do
           # Hack to ensure that Kernel#caller has the same info as
-          # when run from command-line, for Sinatra::Application.app_file.
+          # when run from command-line, for Morrissey::Application.app_file.
           # Also, line numbers are zero-based in JRuby's parser
           vm.provider.runtime.current_context.set_file_and_line(app_file, 0)
           # Run the app
@@ -220,7 +220,7 @@ module IntegrationHelper
     super
 
     base_port = 5000 + Process.pid % 100
-    Sinatra::Base.server.each_with_index do |server, index|
+    Morrissey::Base.server.each_with_index do |server, index|
       Server.run(server, 5000+index)
     end
   end

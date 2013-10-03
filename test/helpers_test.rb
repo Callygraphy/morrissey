@@ -555,7 +555,7 @@ class HelpersTest < Test::Unit::TestCase
   end
 
   describe 'mime_type' do
-    include Sinatra::Helpers
+    include Morrissey::Helpers
 
     it "looks up mime types in Rack's MIME registry" do
       Rack::Mime::MIME_TYPES['.foo'] = 'application/foo'
@@ -577,7 +577,7 @@ class HelpersTest < Test::Unit::TestCase
     end
 
     it 'turns AcceptEntry into String' do
-      type = mime_type(Sinatra::Request::AcceptEntry.new('text/plain'))
+      type = mime_type(Morrissey::Request::AcceptEntry.new('text/plain'))
       assert_equal String, type.class
       assert_equal 'text/plain', type
     end
@@ -731,7 +731,7 @@ class HelpersTest < Test::Unit::TestCase
       mock_app do
         get('/attachment') do
           attachment filename
-          response.write("<sinatra></sinatra>")
+          response.write("<morrissey></morrissey>")
         end
       end
     end
@@ -740,14 +740,14 @@ class HelpersTest < Test::Unit::TestCase
       attachment_app('test.xml')
       get '/attachment'
       assert_equal 'application/xml;charset=utf-8', response['Content-Type']
-      assert_equal '<sinatra></sinatra>', body
+      assert_equal '<morrissey></morrissey>', body
     end
 
     it 'sets the Content-Type response header without extname' do
       attachment_app('test')
       get '/attachment'
       assert_equal 'text/html;charset=utf-8', response['Content-Type']
-      assert_equal '<sinatra></sinatra>', body
+      assert_equal '<morrissey></morrissey>', body
     end
 
     it 'sets the Content-Type response header with extname' do
@@ -755,13 +755,13 @@ class HelpersTest < Test::Unit::TestCase
         get('/attachment') do
           content_type :atom
           attachment 'test.xml'
-          response.write("<sinatra></sinatra>")
+          response.write("<morrissey></morrissey>")
         end
       end
 
       get '/attachment'
       assert_equal 'application/atom+xml', response['Content-Type']
-      assert_equal '<sinatra></sinatra>', body
+      assert_equal '<morrissey></morrissey>', body
     end
 
   end
@@ -1019,7 +1019,7 @@ class HelpersTest < Test::Unit::TestCase
               'Boo!'
             end
           end
-          wrapper = Object.new.extend Sinatra::Helpers
+          wrapper = Object.new.extend Morrissey::Helpers
           @last_modified_time = wrapper.time_for last_modified_time
         end
 

@@ -6,7 +6,7 @@ module Rack::Handler
     extend Test::Unit::Assertions
 
     def self.run(app, options={})
-      assert(app < Sinatra::Base)
+      assert(app < Morrissey::Base)
       assert_equal 9001, options[:Port]
       assert_equal 'foo.local', options[:Host]
       yield new

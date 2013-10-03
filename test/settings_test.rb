@@ -2,10 +2,10 @@ require File.expand_path('../helper', __FILE__)
 
 class SettingsTest < Test::Unit::TestCase
   setup do
-    @base = Sinatra.new(Sinatra::Base)
+    @base = Morrissey.new(Morrissey::Base)
     @base.set :environment => :foo, :app_file => nil
 
-    @application = Sinatra.new(Sinatra::Application)
+    @application = Morrissey.new(Morrissey::Application)
     @application.set :environment => :foo, :app_file => nil
   end
 
@@ -232,7 +232,7 @@ class SettingsTest < Test::Unit::TestCase
     end
 
     it 'returns a friendly 500' do
-      klass = Sinatra.new(Sinatra::Application)
+      klass = Morrissey.new(Morrissey::Application)
       mock_app(klass) {
         enable :show_exceptions
 
@@ -285,7 +285,7 @@ class SettingsTest < Test::Unit::TestCase
     end
 
     it 'dumps exception with backtrace to rack.errors' do
-      klass = Sinatra.new(Sinatra::Application)
+      klass = Morrissey.new(Morrissey::Application)
 
       mock_app(klass) {
         enable :dump_errors
@@ -308,7 +308,7 @@ class SettingsTest < Test::Unit::TestCase
     end
 
     it 'does not dump 404 errors' do
-      klass = Sinatra.new(Sinatra::Application)
+      klass = Morrissey.new(Morrissey::Application)
 
       mock_app(klass) {
         enable :dump_errors
@@ -322,7 +322,7 @@ class SettingsTest < Test::Unit::TestCase
         end
 
         get '/' do
-          raise Sinatra::NotFound
+          raise Morrissey::NotFound
         end
       }
 
@@ -395,8 +395,8 @@ class SettingsTest < Test::Unit::TestCase
       assert @base.public_method_defined?(:foo)
     end
 
-    it 'is possible to use the keyword public in a sinatra app' do
-      app = Sinatra.new do
+    it 'is possible to use the keyword public in a morrissey app' do
+      app = Morrissey.new do
         private
         def priv; end
         public
@@ -441,12 +441,12 @@ class SettingsTest < Test::Unit::TestCase
 
   describe 'app_file' do
     it 'is nil for base classes' do
-      assert_nil Sinatra::Base.app_file
-      assert_nil Sinatra::Application.app_file
+      assert_nil Morrissey::Base.app_file
+      assert_nil Morrissey::Application.app_file
     end
 
     it 'defaults to the file subclassing' do
-      assert_equal File.expand_path(__FILE__), Sinatra.new.app_file
+      assert_equal File.expand_path(__FILE__), Morrissey.new.app_file
     end
   end
 
@@ -538,21 +538,21 @@ class SettingsTest < Test::Unit::TestCase
 
     it 'sets up Rack::Protection' do
       MiddlewareTracker.track do
-        Sinatra::Base.new
+        Morrissey::Base.new
         assert_include MiddlewareTracker.used, Rack::Protection
       end
     end
 
     it 'sets up Rack::Protection::PathTraversal' do
       MiddlewareTracker.track do
-        Sinatra::Base.new
+        Morrissey::Base.new
         assert_include MiddlewareTracker.used, Rack::Protection::PathTraversal
       end
     end
 
     it 'does not set up Rack::Protection::PathTraversal when disabling it' do
       MiddlewareTracker.track do
-        Sinatra.new { set :protection, :except => :path_traversal }.new
+        Morrissey.new { set :protection, :except => :path_traversal }.new
         assert_include MiddlewareTracker.used, Rack::Protection
         assert !MiddlewareTracker.used.include?(Rack::Protection::PathTraversal)
       end
@@ -560,21 +560,21 @@ class SettingsTest < Test::Unit::TestCase
 
     it 'sets up RemoteToken if sessions are enabled' do
       MiddlewareTracker.track do
-        Sinatra.new { enable :sessions }.new
+        Morrissey.new { enable :sessions }.new
         assert_include MiddlewareTracker.used, Rack::Protection::RemoteToken
       end
     end
 
     it 'does not set up RemoteToken if sessions are disabled' do
       MiddlewareTracker.track do
-        Sinatra.new.new
+        Morrissey.new.new
         assert !MiddlewareTracker.used.include?(Rack::Protection::RemoteToken)
       end
     end
 
     it 'sets up RemoteToken if it is configured to' do
       MiddlewareTracker.track do
-        Sinatra.new { set :protection, :session => true }.new
+        Morrissey.new { set :protection, :session => true }.new
         assert_include MiddlewareTracker.used, Rack::Protection::RemoteToken
       end
     end

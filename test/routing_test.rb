@@ -99,7 +99,7 @@ class RoutingTest < Test::Unit::TestCase
   it "overrides the content-type in error handlers" do
     mock_app {
       before { content_type 'text/plain' }
-      error Sinatra::NotFound do
+      error Morrissey::NotFound do
         content_type "text/html"
         "<h1>Not Found</h1>"
       end
@@ -115,7 +115,7 @@ class RoutingTest < Test::Unit::TestCase
     mock_app {
       get '/' do
         @response["Content-Length"] = "30"
-        raise Sinatra::NotFound
+        raise Morrissey::NotFound
       end
     }
 
@@ -878,7 +878,7 @@ class RoutingTest < Test::Unit::TestCase
       application/x-pkcs7-signature
     )
 
-    mime_types.each { |mime_type| assert mime_type.match(Sinatra::Request::HEADER_VALUE_WITH_PARAMS) }
+    mime_types.each { |mime_type| assert mime_type.match(Morrissey::Request::HEADER_VALUE_WITH_PARAMS) }
   end
 
   it "filters by accept header" do
@@ -1290,7 +1290,7 @@ class RoutingTest < Test::Unit::TestCase
   end
 
   it "matches routes defined in superclasses" do
-    base = Class.new(Sinatra::Base)
+    base = Class.new(Morrissey::Base)
     base.get('/foo') { 'foo in baseclass' }
 
     mock_app(base) {
@@ -1307,7 +1307,7 @@ class RoutingTest < Test::Unit::TestCase
   end
 
   it "matches routes in subclasses before superclasses" do
-    base = Class.new(Sinatra::Base)
+    base = Class.new(Morrissey::Base)
     base.get('/foo') { 'foo in baseclass' }
     base.get('/bar') { 'bar in baseclass' }
 
@@ -1353,8 +1353,8 @@ class RoutingTest < Test::Unit::TestCase
   end
 
   it 'plays well with other routing middleware' do
-    middleware = Sinatra.new
-    inner_app  = Sinatra.new { get('/foo') { 'hello' } }
+    middleware = Morrissey.new
+    inner_app  = Morrissey.new { get('/foo') { 'hello' } }
     builder    = Rack::Builder.new do
       use middleware
       map('/test') { run inner_app }
@@ -1379,10 +1379,10 @@ class RoutingTest < Test::Unit::TestCase
     assert list.include?(signature)
   end
 
-  it "sets env['sinatra.route'] to the matched route" do
+  it "sets env['morrissey.route'] to the matched route" do
     mock_app do
       after do
-        assert_equal 'GET /users/:id/status', env['sinatra.route']
+        assert_equal 'GET /users/:id/status', env['morrissey.route']
       end
       get('/users/:id/status') { 'ok' }
     end

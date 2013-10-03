@@ -3,7 +3,7 @@ require File.expand_path('../helper', __FILE__)
 class FooError < RuntimeError
 end
 
-class FooNotFound < Sinatra::NotFound
+class FooNotFound < Morrissey::NotFound
 end
 
 class FooSpecialError < RuntimeError
@@ -85,12 +85,12 @@ class MappedErrorTest < Test::Unit::TestCase
       assert_equal 'FooError!', body
     end
 
-    it "sets env['sinatra.error'] to the rescued exception" do
+    it "sets env['morrissey.error'] to the rescued exception" do
       mock_app do
         set :raise_errors, false
         error(FooError) do
-          assert env.include?('sinatra.error')
-          assert env['sinatra.error'].kind_of?(FooError)
+          assert env.include?('morrissey.error')
+          assert env['morrissey.error'].kind_of?(FooError)
           'looks good'
         end
         get('/') { raise FooError }
@@ -117,15 +117,15 @@ class MappedErrorTest < Test::Unit::TestCase
       assert_equal 500, status
     end
 
-    it "never raises Sinatra::NotFound beyond the application" do
-      mock_app(Sinatra::Application) do
-        get('/') { raise Sinatra::NotFound }
+    it "never raises Morrissey::NotFound beyond the application" do
+      mock_app(Morrissey::Application) do
+        get('/') { raise Morrissey::NotFound }
       end
       assert_nothing_raised { get '/' }
       assert_equal 404, status
     end
 
-    it "cascades for subclasses of Sinatra::NotFound" do
+    it "cascades for subclasses of Morrissey::NotFound" do
       mock_app do
         set :raise_errors, true
         error(FooNotFound) { "foo! not found." }
@@ -145,7 +145,7 @@ class MappedErrorTest < Test::Unit::TestCase
     end
 
     it 'inherits error mappings from base class' do
-      base = Class.new(Sinatra::Base)
+      base = Class.new(Morrissey::Base)
       base.error(FooError) { 'base class' }
 
       mock_app(base) do
@@ -158,7 +158,7 @@ class MappedErrorTest < Test::Unit::TestCase
     end
 
     it 'overrides error mappings in base class' do
-      base = Class.new(Sinatra::Base)
+      base = Class.new(Morrissey::Base)
       base.error(FooError) { 'base class' }
 
       mock_app(base) do

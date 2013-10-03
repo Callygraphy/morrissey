@@ -28,36 +28,36 @@ class DelegatorTest < Test::Unit::TestCase
   end
 
   setup do
-    @target_was = Sinatra::Delegator.target
+    @target_was = Morrissey::Delegator.target
   end
 
   def teardown
-    Sinatra::Delegator.target = @target_was
+    Morrissey::Delegator.target = @target_was
   end
 
   def delegation_app(&block)
-    mock_app { Sinatra::Delegator.target = self }
+    mock_app { Morrissey::Delegator.target = self }
     delegate(&block)
   end
 
   def mirror(&block)
     mirror = Mirror.new
-    Sinatra::Delegator.target = mirror
+    Morrissey::Delegator.target = mirror
     delegate(&block)
   end
 
   def delegate(&block)
-    assert Sinatra::Delegator.target != Sinatra::Application
-    Object.new.extend(Sinatra::Delegator).instance_eval(&block) if block
-    Sinatra::Delegator.target
+    assert Morrissey::Delegator.target != Morrissey::Application
+    Object.new.extend(Morrissey::Delegator).instance_eval(&block) if block
+    Morrissey::Delegator.target
   end
 
   def target
-    Sinatra::Delegator.target
+    Morrissey::Delegator.target
   end
 
-  it 'defaults to Sinatra::Application as target' do
-    assert_equal Sinatra::Application, Sinatra::Delegator.target
+  it 'defaults to Morrissey::Application as target' do
+    assert_equal Morrissey::Application, Morrissey::Delegator.target
   end
 
   %w[get put post delete options patch link unlink].each do |verb|
@@ -90,19 +90,19 @@ class DelegatorTest < Test::Unit::TestCase
 
   it "registers extensions with the delegation target" do
     app, mixin = mirror, Module.new
-    Sinatra.register mixin
+    Morrissey.register mixin
     assert_equal ["register", mixin.to_s], app.last_call
   end
 
   it "registers helpers with the delegation target" do
     app, mixin = mirror, Module.new
-    Sinatra.helpers mixin
+    Morrissey.helpers mixin
     assert_equal ["helpers", mixin.to_s], app.last_call
   end
 
   it "registers middleware with the delegation target" do
     app, mixin = mirror, Module.new
-    Sinatra.use mixin
+    Morrissey.use mixin
     assert_equal ["use", mixin.to_s], app.last_call
   end
 
@@ -128,7 +128,7 @@ class DelegatorTest < Test::Unit::TestCase
   end
 
   it "delegates crazy method names" do
-    Sinatra::Delegator.delegate "foo:bar:"
+    Morrissey::Delegator.delegate "foo:bar:"
     method = mirror { send "foo:bar:" }.last_call.first
     assert_equal "foo:bar:", method
   end

@@ -3,13 +3,13 @@ require 'stringio'
 
 class RequestTest < Test::Unit::TestCase
   it 'responds to #user_agent' do
-    request = Sinatra::Request.new({'HTTP_USER_AGENT' => 'Test'})
+    request = Morrissey::Request.new({'HTTP_USER_AGENT' => 'Test'})
     assert request.respond_to?(:user_agent)
     assert_equal 'Test', request.user_agent
   end
 
   it 'parses POST params when Content-Type is form-dataish' do
-    request = Sinatra::Request.new(
+    request = Morrissey::Request.new(
       'REQUEST_METHOD' => 'PUT',
       'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
       'rack.input' => StringIO.new('foo=bar')
@@ -18,40 +18,40 @@ class RequestTest < Test::Unit::TestCase
   end
 
   it 'is secure when the url scheme is https' do
-    request = Sinatra::Request.new('rack.url_scheme' => 'https')
+    request = Morrissey::Request.new('rack.url_scheme' => 'https')
     assert request.secure?
   end
 
   it 'is not secure when the url scheme is http' do
-    request = Sinatra::Request.new('rack.url_scheme' => 'http')
+    request = Morrissey::Request.new('rack.url_scheme' => 'http')
     assert !request.secure?
   end
 
   it 'respects X-Forwarded-Proto header for proxied SSL' do
-    request = Sinatra::Request.new('HTTP_X_FORWARDED_PROTO' => 'https')
+    request = Morrissey::Request.new('HTTP_X_FORWARDED_PROTO' => 'https')
     assert request.secure?
   end
 
   it 'is possible to marshal params' do
-    request = Sinatra::Request.new(
+    request = Morrissey::Request.new(
       'REQUEST_METHOD' => 'PUT',
       'CONTENT_TYPE' => 'application/x-www-form-urlencoded',
       'rack.input' => StringIO.new('foo=bar')
     )
-    Sinatra::Base.new!.send(:indifferent_hash).replace(request.params)
+    Morrissey::Base.new!.send(:indifferent_hash).replace(request.params)
     dumped = Marshal.dump(request.params)
     assert_equal 'bar', Marshal.load(dumped)['foo']
   end
 
   it "exposes the preferred type's parameters" do
-    request = Sinatra::Request.new(
+    request = Morrissey::Request.new(
       'HTTP_ACCEPT' => 'image/jpeg; compress=0.25'
     )
     assert_equal({ 'compress' => '0.25' }, request.preferred_type.params)
   end
 
   it "makes accept types behave like strings" do
-    request = Sinatra::Request.new('HTTP_ACCEPT' => 'image/jpeg; compress=0.25')
+    request = Morrissey::Request.new('HTTP_ACCEPT' => 'image/jpeg; compress=0.25')
     assert                     request.accept?('image/jpeg')
     assert_equal 'image/jpeg', request.preferred_type.to_s
     assert_equal 'image/jpeg', request.preferred_type.to_str
@@ -64,7 +64,7 @@ class RequestTest < Test::Unit::TestCase
   end
 
   it "properly decodes MIME type parameters" do
-    request = Sinatra::Request.new(
+    request = Morrissey::Request.new(
       'HTTP_ACCEPT' => 'image/jpeg;unquoted=0.25;quoted="0.25";chartest="\";,\x"'
     )
     expected = { 'unquoted' => '0.25', 'quoted' => '0.25', 'chartest' => '";,x' }

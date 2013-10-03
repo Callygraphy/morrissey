@@ -1,5 +1,5 @@
 $stderr.puts "loading"
-require 'sinatra'
+require 'morrissey'
 
 configure do
   set :foo, :bar
@@ -44,7 +44,7 @@ get '/send' do
   "ok"
 end
 
-class Subclass < Sinatra::Base
+class Subclass < Morrissey::Base
   set :out, nil
   get '/subclass/async' do
     stream(:keep_open) { |o| (settings.out = o) << "hi!" }

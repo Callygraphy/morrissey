@@ -3,7 +3,7 @@
 require File.expand_path('../helper', __FILE__)
 
 class ResponseTest < Test::Unit::TestCase
-  setup { @response = Sinatra::Response.new }
+  setup { @response = Morrissey::Response.new }
 
   def assert_same_body(a, b)
     assert_equal a.to_enum(:each).to_a, b.to_enum(:each).to_a
@@ -51,8 +51,8 @@ class ResponseTest < Test::Unit::TestCase
     assert @response.finish
   end
 
-  it 'does not nest a Sinatra::Response' do
-    @response.body = Sinatra::Response.new ["foo"]
+  it 'does not nest a Morrissey::Response' do
+    @response.body = Morrissey::Response.new ["foo"]
     assert_same_body @response.body, ["foo"]
   end
 

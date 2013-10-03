@@ -109,7 +109,7 @@ class BeforeFilterTest < Test::Unit::TestCase
   end
 
   it "runs filters defined in superclasses" do
-    base = Class.new(Sinatra::Base)
+    base = Class.new(Morrissey::Base)
     base.before { @foo = 'hello from superclass' }
 
     mock_app(base) { get('/foo') { @foo } }
@@ -165,7 +165,7 @@ class BeforeFilterTest < Test::Unit::TestCase
         doodle = 'and runs'
       end
       error 500 do
-        "Error handled #{env['sinatra.error'].message}"
+        "Error handled #{env['morrissey.error'].message}"
       end
     end
 
@@ -249,7 +249,7 @@ class AfterFilterTest < Test::Unit::TestCase
 
   it "runs filters defined in superclasses" do
     count = 2
-    base = Class.new(Sinatra::Base)
+    base = Class.new(Morrissey::Base)
     base.after { count *= 2 }
     mock_app(base) do
       get('/foo') do
@@ -471,7 +471,7 @@ class AfterFilterTest < Test::Unit::TestCase
         doodle = 'Been now'
       end
       error 500 do
-        "Error handled #{env['sinatra.error'].message}"
+        "Error handled #{env['morrissey.error'].message}"
       end
     end
 

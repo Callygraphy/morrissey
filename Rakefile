@@ -16,8 +16,8 @@ CLEAN.include "**/*.rbc"
 
 def source_version
   @source_version ||= begin
-    load './lib/sinatra/version.rb'
-    Sinatra::VERSION
+    load './lib/morrissey/version.rb'
+    Morrissey::VERSION
   end
 end
 
@@ -47,7 +47,7 @@ Rake::TestTask.new(:"test:core") do |t|
   core_tests = %w[base delegator encoding extensions filter
      helpers mapped_error middleware radius rdoc
      readme request response result route_added_hook
-     routing server settings sinatra static templates]
+     routing server settings morrissey static templates]
   t.test_files = core_tests.map {|n| "test/#{n}_test.rb"}
   t.ruby_opts = ["-rubygems"] if defined? Gem
   t.ruby_opts << "-I."
@@ -134,7 +134,7 @@ task :toc, [:readme] do |t, a|
     title.downcase.gsub(/(?!-)\W /, '-').gsub(' ', '-').gsub(/(?!-)\W/, '')
   end
 
-  puts "* [Sinatra](#sinatra)"
+  puts "* [Morrissey](#morrissey)"
   title = Regexp.new('(?<=\* )(.*)') # so Ruby 1.8 doesn't complain
   File.binread(a.readme).scan(/^##.*/) do |line|
     puts line.gsub(/#(?=#)/, '    ').gsub('#', '*').gsub(title) { "[#{$1}](##{link($1)})" }
@@ -147,11 +147,11 @@ if defined?(Gem)
   # Load the gemspec using the same limitations as github
   def spec
     require 'rubygems' unless defined? Gem::Specification
-    @spec ||= eval(File.read('sinatra.gemspec'))
+    @spec ||= eval(File.read('morrissey.gemspec'))
   end
 
   def package(ext='')
-    "pkg/sinatra-#{spec.version}" + ext
+    "pkg/morrissey-#{spec.version}" + ext
   end
 
   desc 'Build packages'
@@ -165,15 +165,15 @@ if defined?(Gem)
   directory 'pkg/'
   CLOBBER.include('pkg')
 
-  file package('.gem') => %w[pkg/ sinatra.gemspec] + spec.files do |f|
-    sh "gem build sinatra.gemspec"
+  file package('.gem') => %w[pkg/ morrissey.gemspec] + spec.files do |f|
+    sh "gem build morrissey.gemspec"
     mv File.basename(f.name), f.name
   end
 
   file package('.tar.gz') => %w[pkg/] + spec.files do |f|
     sh <<-SH
       git archive \
-        --prefix=sinatra-#{source_version}/ \
+        --prefix=morrissey-#{source_version}/ \
         --format=tar \
         HEAD | gzip > #{f.name}
     SH
@@ -190,8 +190,8 @@ if defined?(Gem)
       git commit --allow-empty -a -m '#{source_version} release'  &&
       git tag -s v#{source_version} -m '#{source_version} release'  &&
       git tag -s #{source_version} -m '#{source_version} release'  &&
-      git push && (git push sinatra || true) &&
-      git push --tags && (git push sinatra --tags || true)
+      git push && (git push morrissey || true) &&
+      git push --tags && (git push morrissey --tags || true)
     SH
   end
 end

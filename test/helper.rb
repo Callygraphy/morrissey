@@ -18,9 +18,9 @@ $LOAD_PATH.unshift libdir unless $LOAD_PATH.include?(libdir)
 
 require 'contest'
 require 'rack/test'
-require 'sinatra/base'
+require 'morrissey/base'
 
-class Sinatra::Base
+class Morrissey::Base
   # Allow assertions in request context
   include Test::Unit::Assertions
 end
@@ -31,7 +31,7 @@ class Rack::Builder
   end
 end
 
-Sinatra::Base.set :environment, :test
+Morrissey::Base.set :environment, :test
 
 class Test::Unit::TestCase
   include Rack::Test::Methods
@@ -50,14 +50,14 @@ class Test::Unit::TestCase
   alias_method :response, :last_response
 
   setup do
-    Sinatra::Base.set :environment, :test
+    Morrissey::Base.set :environment, :test
   end
 
-  # Sets up a Sinatra::Base subclass defined with the block
+  # Sets up a Morrissey::Base subclass defined with the block
   # given. Used in setup or individual spec methods to establish
   # the application.
-  def mock_app(base=Sinatra::Base, &block)
-    @app = Sinatra.new(base, &block)
+  def mock_app(base=Morrissey::Base, &block)
+    @app = Morrissey.new(base, &block)
   end
 
   def app
